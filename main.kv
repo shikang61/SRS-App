@@ -1,0 +1,284 @@
+#:import ScrollEffect kivy.effects.scroll.ScrollEffect
+#:import F kivy.factory.Factory
+
+<MyLabel@Label>:
+    color: 0,0,0,1
+    text_size: self.width, None
+    size_hint: 1, None
+    height: self.texture_size[1]
+    padding: 20,20
+
+<RoundedButton@Button>
+    background_color: (0,0,0,0)
+    background_normal: ''
+    font_size: 40
+    back_color:(74/255, 168/255, 1, 0.9)
+    markup: True
+    canvas.before:
+        Color: 
+            rgba: self.back_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [60]
+    opacity: 1 if self.state == 'normal' else .5
+
+<MyOutputLabel@MyLabel>:
+    size_hint: 1, 1
+    halign: 'center'
+    font_size: 40
+    canvas.before:
+        Color:
+            rgba: 245/255, 209/255, 162/255, 0.7
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [60]        
+
+<Category_Widget>:
+    padding: 30
+    cols: 1
+    ScrollView:
+        do_scroll_y: True
+        GridLayout:
+            spacing: 20
+            padding: 10
+            size_hint: 1,0.9
+            cols: 1
+            RoundedButton:
+                id: study
+                text: "[b]Study[/b]"
+                back_color: 49/255, 22/255, 183/255, 0.9
+                on_release: 
+                    root.study_state()
+                    app.root.current = 'secondScreen'
+                    
+            RoundedButton:
+                id: work
+                text: "[b]Work[/b]"
+                back_color: 49/255, 22/255, 183/255, 0.8
+                on_release: 
+                    root.work_state()
+                    app.root.current = 'secondScreen'
+            RoundedButton:
+                id: play
+                text: "[b]Play[/b]"
+                back_color: 49/255, 22/255, 183/255, 0.6
+                on_release: 
+                    root.play_state()
+                    app.root.current = 'secondScreen'
+            RoundedButton:
+                id: rest
+                text: "[b]Rest[/b]"
+                back_color: 49/255, 22/255, 183/255, 0.4
+                on_release: 
+                    root.rest_state()
+                    app.root.current = 'secondScreen'
+
+<Timer_Widget>:
+    rows: 3
+    spacing: 20
+    padding: 30
+    BoxLayout:
+        MyLabel: 
+            pos_hint:{'center_y':0.5}
+            id: time
+            text: '00:00:00'
+            text_size: self.size
+            font_size: 100
+            markup: True
+            halign: 'center'
+            valign: 'middle'
+
+    BoxLayout: 
+        spacing: 20
+        size_hint: 1, 0.25
+        RoundedButton:
+            id: start_stop
+            text: '[b]Start[/b]'
+            on_press: root.start_stop()
+            back_color: (60/255, 218/255, 86/255, 0.9)
+        RoundedButton:
+            text: '[b]Reset[/b]'
+            back_color: (233/255, 129/255, 25/255, 0.9)
+            on_press: root.reset()
+    
+    BoxLayout:
+        size_hint: 1, 0.25
+        Label:
+            size_hint_x: None
+            width: 100
+        RoundedButton:
+            text: '[b]End and save[/b]'
+            on_press: root.popup()
+            on_release: root.save()
+        Label:
+            size_hint_x: None
+            width: 100
+           
+<Report_Widget>:
+    cols: 1
+    padding: 30
+    spacing: 10
+    BoxLayout:
+        spacing: 30
+        padding: 10,10
+        size_hint: 1, 0.4
+        MyOutputLabel:
+            id: play_time 
+            text: "[i]Play Time[/i]"
+            markup: True
+
+        MyOutputLabel:
+            id: study_time 
+            text: "[i]Study Time[/i]"
+            markup: True
+        
+    BoxLayout:
+        spacing: 30
+        padding: 10,10
+        size_hint: 1, 0.4
+        MyOutputLabel:
+            id: work_time 
+            text: "[i]Work Time[/i]"
+            markup: True
+        MyOutputLabel:     
+            id: rest_time 
+            text: "[i]Rest Time[/i]"
+            markup: True
+    BoxLayout:
+        size_hint: 1, 0.2
+        RoundedButton:
+            id: show_result
+            text: "Get Today's Report!"
+            on_press:
+                root.get_report()
+
+<Login_Widget>:
+    cols: 1
+    padding: 40, 40
+    spacing: 30
+    MyLabel:
+        text: "[b][color=#000000]Welcome to the amazing app that helps you keep track of your time![/color][/b]"
+        markup: True
+        font_size: 45
+        halign: 'center'
+        valign: 'center'
+        padding_y: 40
+
+    TextInput:
+        id: key
+        hint_text: "Press the button to copy a secret email \n\n\nShare your Google Sheet with the secret email"
+        padding: 15
+        multiline: False
+        disabled: True
+        font_size: 35
+        on_text_validate:
+            root.save()
+
+    BoxLayout:
+        size_hint: 1, 0.2
+        RoundedButton:
+            id: copy_button
+            text: "Copy email"
+            on_press:
+                root.copy()
+
+<MainScreen>
+    name: 'mainScreen'
+    Screen:
+        NavigationLayout:
+            ScreenManager:
+                Screen:
+                    GridLayout:
+                        rows:2
+                        BoxLayout:
+                            orientation: "vertical"
+                            MDToolbar:
+                                title: "SRS Timer"
+                                anchor_title: 'center'
+                                elevation: 10
+                                MDIconButton:
+                                    icon: 'database'
+                                    pos_hint: {'center_y': 0.5}
+                                    on_release:
+                                        app.root.current = 'thirdScreen'
+                                    
+                                
+
+                            Category_Widget:
+                    
+<SecondScreen>
+    name: 'secondScreen'
+    Screen:
+        NavigationLayout:
+            ScreenManager:
+                Screen:
+                    GridLayout:
+                        rows:2
+                        BoxLayout:
+                            orientation: "vertical"
+                            MDToolbar:
+                                id: session_name
+                                anchor_title: 'left'
+                                elevation: 10
+                                MDIconButton:
+                                    icon: 'database'
+                                    pos_hint: {'center_y': 0.5}
+                                    on_release:
+                                        app.root.current = 'thirdScreen'
+                                
+                                MDIconButton:
+                                    icon: "home"
+                                    pos_hint: {'center_y': 0.5}
+                                    md_bg_color: app.theme_cls.primary_color
+                                    on_release: 
+                                        app.root.current = 'mainScreen'
+                    
+                            Timer_Widget:
+
+<ThirdScreen>:
+    name: 'thirdScreen'
+    Screen:
+        NavigationLayout:
+            ScreenManager:
+                Screen:
+                    GridLayout:
+                        rows:2
+                        BoxLayout:
+                            orientation: "vertical"
+                            MDToolbar:
+                                id: report
+                                elevation: 10
+                                MDIconButton:
+                                    icon: "trash-can"
+                                    pos_hint: {'center_y': 0.5}
+                                    md_bg_color: app.theme_cls.primary_color
+                                    on_release: 
+                                        root.clear()
+
+                                MDIconButton:
+                                    icon: "home"
+                                    pos_hint: {'center_y': 0.5}
+                                    md_bg_color: app.theme_cls.primary_color
+                                    on_release: 
+                                        app.root.current = 'mainScreen'
+                                
+                                
+                            Report_Widget:
+
+<LoginScreen>:
+    name: 'thirdScreen'
+    Screen:
+        NavigationLayout:
+            ScreenManager:
+                Screen:
+                    GridLayout:
+                        rows:2
+                        BoxLayout:
+                            orientation: "vertical"
+                            MDToolbar:
+                                title: "SRS App"
+                                anchor_title: 'center'
+                                elevation: 10    
+                            Login_Widget:
