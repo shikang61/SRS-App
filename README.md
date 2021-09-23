@@ -11,8 +11,9 @@ With that, I introduce SRS App (it stands for Serious App), an app made by an ad
 
 Here are its functions:
 1. Start-stop timer
-2. Summary page
-3. Link to Google sheets
+2. 4 Categories of activity to choose from 
+3. Summary page
+4. Link to Google sheets
 
 Technologies used in the App: 
 - This app is written in Python and kivy/kivyMD. 
